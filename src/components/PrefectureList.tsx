@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { fetchPrefectures } from '../services/api';
+import React from 'react';
 
 interface Prefecture {
   prefCode: number;
@@ -7,24 +6,11 @@ interface Prefecture {
 }
 
 interface PrefectureListProps {
+  prefectures: Prefecture[];
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
 }
 
-const PrefectureList: React.FC<PrefectureListProps> = ({ onPrefectureChange }) => {
-  const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
-
-  useEffect(() => {
-    const loadPrefectures = async () => {
-      try {
-        const data = await fetchPrefectures();
-        setPrefectures(data);
-      } catch (error) {
-        console.error('Failed to fetch prefectures:', error);
-      }
-    };
-    loadPrefectures();
-  }, []);
-
+const PrefectureList: React.FC<PrefectureListProps> = ({ prefectures, onPrefectureChange }) => {
   return (
     <div className="prefecture-list">
       <h2>都道府県一覧</h2>
