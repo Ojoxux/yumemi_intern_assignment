@@ -1,6 +1,6 @@
 import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PrefectureList from '../PrefectureList';
+import PrefectureList from './PrefectureList';
 
 const mockPrefectures = [
   { prefCode: 1, prefName: '北海道' },
