@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPrefectures, fetchPopulation } from '../services/api';
-import PrefectureList from './PrefectureList';
-import PopulationGraph from './PopulationGraph';
+import { fetchPrefectures, fetchPopulation } from '../../services/api';
+import Header from '../molecules/Header';
+import PrefectureList from '../organisms/PrefectureList';
+import PopulationGraph from '../organisms/PopulationGraph';
+import '../../styles/Main.css';
 
 const Main: React.FC = () => {
   const [prefectures, setPrefectures] = useState<{ prefCode: number; prefName: string }[]>([]);
@@ -44,14 +46,16 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <h1>都道府県別人口推移</h1>
-      <PrefectureList
-        prefectures={prefectures}
-        selectedPrefectures={selectedPrefectures}
-        onPrefectureChange={handlePrefectureChange}
-      />
-      <PopulationGraph data={populationData} />
+    <div className="main-container">
+      <Header />
+      <main className="content">
+        <PrefectureList
+          prefectures={prefectures}
+          selectedPrefectures={selectedPrefectures}
+          onPrefectureChange={handlePrefectureChange}
+        />
+        <PopulationGraph data={populationData} />
+      </main>
     </div>
   );
 };

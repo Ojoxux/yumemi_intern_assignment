@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PopulationGraph from '../PopulationGraph';
+import PopulationGraph from './PopulationGraph';
 
 // Rechartsのモックを作成
 jest.mock('recharts', () => {
