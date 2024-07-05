@@ -12,10 +12,10 @@ interface PrefectureListProps {
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
 }
 
-const PrefectureList: React.FC<PrefectureListProps> = ({ 
-  prefectures, 
-  selectedPrefectures, 
-  onPrefectureChange 
+const PrefectureList: React.FC<PrefectureListProps> = ({
+  prefectures,
+  selectedPrefectures,
+  onPrefectureChange,
 }) => {
   return (
     <div className="prefecture-list">
