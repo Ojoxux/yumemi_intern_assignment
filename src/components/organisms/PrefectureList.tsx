@@ -1,4 +1,5 @@
 import React from 'react';
+import CheckboxWithLabel from '../molecules/CheckboxWithLabel';
 
 interface Prefecture {
   prefCode: number;
@@ -18,16 +19,13 @@ const PrefectureList: React.FC<PrefectureListProps> = ({
 }) => {
   return (
     <div className="prefecture-list">
-      <h2>都道府県一覧</h2>
       {prefectures.map((pref) => (
-        <label key={pref.prefCode} className="prefecture-item">
-          <input
-            type="checkbox"
-            checked={selectedPrefectures[pref.prefCode] || false}
-            onChange={(e) => onPrefectureChange(pref.prefCode, e.target.checked)}
-          />
-          {pref.prefName}
-        </label>
+        <CheckboxWithLabel
+          key={pref.prefCode}
+          label={pref.prefName}
+          checked={selectedPrefectures[pref.prefCode] || false}
+          onChange={(checked) => onPrefectureChange(pref.prefCode, checked)}
+        />
       ))}
     </div>
   );
