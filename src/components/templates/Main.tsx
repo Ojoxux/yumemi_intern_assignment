@@ -3,6 +3,7 @@ import { fetchPrefectures, fetchPopulation } from '../../services/api';
 import Header from '../molecules/Header';
 import PrefectureList from '../organisms/PrefectureList';
 import PopulationGraph from '../organisms/PopulationGraph';
+import '../../styles/Main.css';
 
 const Main: React.FC = () => {
   const [prefectures, setPrefectures] = useState<{ prefCode: number; prefName: string }[]>([]);
@@ -45,9 +46,9 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="main-container">
       <Header />
-      <main className="container mx-auto mt-8 p-4">
+      <main className="content">
         <PrefectureList
           prefectures={prefectures}
           selectedPrefectures={selectedPrefectures}
