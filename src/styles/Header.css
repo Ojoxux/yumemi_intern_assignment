@@ -1,3 +1,4 @@
+/* src/styles/Header.css */
 .header {
     background: linear-gradient(to right, #8b5cf6, #ec4899);
     padding: 1.5rem;
@@ -17,6 +18,7 @@
     font-weight: bold;
     color: white;
     letter-spacing: 0.025em;
+    margin: 0;
   }
   
   .header-subtitle {
