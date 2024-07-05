@@ -45,15 +45,15 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="min-h-screen bg-gray-100">
       <Header />
-      <main className="mt-4">
-      <PrefectureList
-        prefectures={prefectures}
-        selectedPrefectures={selectedPrefectures}
-        onPrefectureChange={handlePrefectureChange}
-      />
-      <PopulationGraph data={populationData} />
+      <main className="container mx-auto mt-8 p-4">
+        <PrefectureList
+          prefectures={prefectures}
+          selectedPrefectures={selectedPrefectures}
+          onPrefectureChange={handlePrefectureChange}
+        />
+        <PopulationGraph data={populationData} />
       </main>
     </div>
   );
