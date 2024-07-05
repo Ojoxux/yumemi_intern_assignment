@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPrefectures, fetchPopulation } from '../../services/api';
+import Header from '../molecules/Header';
 import PrefectureList from '../organisms/PrefectureList';
 import PopulationGraph from '../organisms/PopulationGraph';
 
@@ -44,14 +45,16 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <h1>都道府県別人口推移</h1>
+    <div className="container mx-auto">
+      <Header />
+      <main className="mt-4">
       <PrefectureList
         prefectures={prefectures}
         selectedPrefectures={selectedPrefectures}
         onPrefectureChange={handlePrefectureChange}
       />
       <PopulationGraph data={populationData} />
+      </main>
     </div>
   );
 };
