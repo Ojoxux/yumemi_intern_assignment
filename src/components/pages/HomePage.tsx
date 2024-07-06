@@ -5,7 +5,7 @@ import PopulationGraph from '../../components/organisms/PopulationGraph';
 import { usePrefectureData } from '../../hooks/usePrefectureData';
 
 const HomePage: React.FC = () => {
-  const { prefectures, selectedPrefectures, populationData, handlePrefectureChange } = usePrefectureData();
+  const { prefectures, selectedPrefectures, populationData, handlePrefectureChange, clearAllSelections } = usePrefectureData();
 
   return (
     <BasicTemplate>
@@ -13,6 +13,7 @@ const HomePage: React.FC = () => {
         prefectures={prefectures}
         selectedPrefectures={selectedPrefectures}
         onPrefectureChange={handlePrefectureChange}
+        onClearAll={clearAllSelections}
       />
       <PopulationGraph data={populationData} />
     </BasicTemplate>
