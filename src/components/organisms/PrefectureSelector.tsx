@@ -1,5 +1,6 @@
 import React from 'react';
 import CheckboxWithLabel from '../molecules/CheckboxWithLabel';
+import styles from './PrefectureSelector.module.css';
 
 interface PrefectureSelectorProps {
   prefectures: { prefCode: number; prefName: string }[];
@@ -12,7 +13,7 @@ const PrefectureSelector: React.FC<PrefectureSelectorProps> = ({
   selectedPrefectures,
   onPrefectureChange,
 }) => (
-  <div className="prefecture-selector">
+  <div className={styles.prefectureSelector}>
     {prefectures.map((pref) => (
       <CheckboxWithLabel
         key={pref.prefCode}
