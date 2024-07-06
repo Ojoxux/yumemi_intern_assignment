@@ -1,0 +1,10 @@
+.checkboxWithLabel {
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    min-width: 90px;
+  }
+  
+  .checkboxWithLabel input {
+    margin-right: 5px;
+  }
