@@ -9,13 +9,11 @@ const mockPrefectures = [
 describe('PrefectureSelector', () => {
   it('renders all prefectures', () => {
     const mockOnChange = jest.fn();
-    const mockOnClearAll = jest.fn();
     render(
       <PrefectureSelector
         prefectures={mockPrefectures}
         selectedPrefectures={{}}
         onPrefectureChange={mockOnChange}
-        onClearAll={mockOnClearAll}
       />
     );
     expect(screen.getByText('北海道')).toBeInTheDocument();
@@ -30,7 +28,6 @@ describe('PrefectureSelector', () => {
         prefectures={mockPrefectures}
         selectedPrefectures={{}}
         onPrefectureChange={mockOnChange}
-        onClearAll={mockOnClearAll}
       />
     );
     fireEvent.click(screen.getByLabelText('北海道'));
@@ -45,7 +42,6 @@ describe('PrefectureSelector', () => {
         prefectures={mockPrefectures}
         selectedPrefectures={{}}
         onPrefectureChange={mockOnChange}
-        onClearAll={mockOnClearAll}
       />
     );
     fireEvent.click(screen.getByText('全て外す'));
