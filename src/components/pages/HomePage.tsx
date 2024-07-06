@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPrefectures, fetchPopulation } from '../../services/api';
 import Header from '../molecules/Header';
-import PrefectureList from '../organisms/PrefectureList';
+import PrefectureList from '../organisms/PrefectureSelector';
 import PopulationGraph from '../organisms/PopulationGraph';
 import '../../styles/Main.css';
 
