@@ -1,12 +1,25 @@
 import { useState, useEffect } from 'react';
 import { fetchPrefectures, fetchPopulation } from '../../services/api';
 
+interface Prefecture {
+  prefCode: number;
+  prefName: string;
+}
+
+interface PopulationData {
+  year: number;
+  value: number;
+}
+
+interface PrefecturePopulation {
+  prefName: string;
+  data: PopulationData[];
+}
+
 export const usePrefectureData = () => {
-  const [prefectures, setPrefectures] = useState<{ prefCode: number; prefName: string }[]>([]);
-  const [selectedPrefectures, setSelectedPrefectures] = useState<{ [key: number]: boolean }>({});
-  const [populationData, setPopulationData] = useState
-    { prefName: string; data: { year: number; value: number }[] }[]
-  >([]);
+  const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
+  const [selectedPrefectures, setSelectedPrefectures] = useState<Record<number, boolean>>({});
+  const [populationData, setPopulationData] = useState<PrefecturePopulation[]>([]);
 
   useEffect(() => {
     const loadPrefectures = async () => {
