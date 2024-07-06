@@ -6,14 +6,17 @@ interface PrefectureSelectorProps {
   prefectures: { prefCode: number; prefName: string }[];
   selectedPrefectures: { [key: number]: boolean };
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
+  onClearAll: () => void;
 }
 
 const PrefectureSelector: React.FC<PrefectureSelectorProps> = ({
   prefectures,
   selectedPrefectures,
   onPrefectureChange,
+  onClearAll,
 }) => (
   <div className={styles.prefectureSelector}>
+    <button onClick={onClearAll} className={styles.clearAllButton}>全て外す</button>
     {prefectures.map((pref) => (
       <CheckboxWithLabel
         key={pref.prefCode}
