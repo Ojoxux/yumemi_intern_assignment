@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import HomePage from './HomePage';
 
 // Mock the custom hook
-jest.mock('../../hooks/usePrefectureData', () => ({
+jest.mock('../hooks/usePrefectureData', () => ({
   usePrefectureData: () => ({
     prefectures: [{ prefCode: 1, prefName: '北海道' }],
     selectedPrefectures: {},
