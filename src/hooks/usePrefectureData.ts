@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchPrefectures, fetchPopulation } from '../../services/api';
+import { fetchPrefectures, fetchPopulation } from '../services/api';
 
 interface Prefecture {
   prefCode: number;
