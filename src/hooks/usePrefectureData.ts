@@ -54,5 +54,10 @@ export const usePrefectureData = () => {
     }
   };
 
-  return { prefectures, selectedPrefectures, populationData, handlePrefectureChange };
+  const clearAllSelections = () => {
+    setSelectedPrefectures({});
+    setPopulationData([]);
+  };
+
+  return { prefectures, selectedPrefectures, populationData, handlePrefectureChange, clearAllSelections };
 };

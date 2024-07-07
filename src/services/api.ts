@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_ENDPOINT = 'https://opendata.resas-portal.go.jp';
-const API_KEY = import.meta.env.VITE_REACT_APP_RESAS_API_KEY;
+const API_KEY = process.env.VITE_REACT_APP_RESAS_API_KEY || '';
 
 const api = axios.create({
   baseURL: API_ENDPOINT,
