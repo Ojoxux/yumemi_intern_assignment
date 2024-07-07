@@ -22,7 +22,6 @@ describe('PrefectureSelector', () => {
 
   it('calls onPrefectureChange when a prefecture is selected', () => {
     const mockOnChange = jest.fn();
-    const mockOnClearAll = jest.fn();
     render(
       <PrefectureSelector
         prefectures={mockPrefectures}
