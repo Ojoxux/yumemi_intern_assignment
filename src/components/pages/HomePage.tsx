@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
         onPrefectureChange={handlePrefectureChange}
       />
       <div className={styles.clearButtonContainer}>
-        <Button onClick={clearAllSelections}>全て外す</Button>
+        <Button onClick={clearAllSelections}>選択をクリア</Button>
       </div>
       <PopulationGraph data={populationData} />
     </BasicTemplate>
