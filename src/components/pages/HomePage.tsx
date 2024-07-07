@@ -2,10 +2,12 @@ import React from 'react';
 import BasicTemplate from '../../components/templates/BasicTemplate';
 import PrefectureSelector from '../../components/organisms/PrefectureSelector';
 import PopulationGraph from '../../components/organisms/PopulationGraph';
+import Button from '../../components/atoms/Button';
 import { usePrefectureData } from '../../hooks/usePrefectureData';
+import styles from './HomePage.module.css';
 
 const HomePage: React.FC = () => {
-  const { prefectures, selectedPrefectures, populationData, handlePrefectureChange } = usePrefectureData();
+  const { prefectures, selectedPrefectures, populationData, handlePrefectureChange, clearAllSelections } = usePrefectureData();
 
   return (
     <BasicTemplate>
@@ -14,6 +16,9 @@ const HomePage: React.FC = () => {
         selectedPrefectures={selectedPrefectures}
         onPrefectureChange={handlePrefectureChange}
       />
+      <div className={styles.clearButtonContainer}>
+        <Button onClick={clearAllSelections}>選択をクリア</Button>
+      </div>
       <PopulationGraph data={populationData} />
     </BasicTemplate>
   );
