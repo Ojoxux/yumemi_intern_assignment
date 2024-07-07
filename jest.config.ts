@@ -11,8 +11,10 @@ const config: Config.InitialOptions = {
     'ts-jest': {
       tsconfig: 'tsconfig.json',
     },
+    'process.env': {
+      VITE_REACT_APP_RESAS_API_KEY: 'test-api-key'
+    }
   },
-  setupFiles: ['<rootDir>/src/setupTests.ts'],
 };
 
 export default config;
