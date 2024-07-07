@@ -17,7 +17,7 @@ describe('HomePage', () => {
 
   it('renders clear button', () => {
     render(<HomePage />);
-    expect(screen.getByText('全て外す')).toBeInTheDocument();
+    expect(screen.getByText('選択をクリア')).toBeInTheDocument();
   });
 
   it('calls clearAllSelections when clear button is clicked', () => {
