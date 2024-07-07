@@ -10,25 +10,17 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-interface DataPoint {
-  year: number;
-  value: number;
-}
-
-interface PrefectureData {
-  prefName: string;
-  data: DataPoint[];
-}
+import { PrefecturePopulation } from '../../types';
 
 interface PopulationGraphProps {
-  data: PrefectureData[];
+  data: PrefecturePopulation[];
 }
 
 const PopulationGraph: React.FC<PopulationGraphProps> = ({ data }) => {
   console.log('Rendering PopulationGraph with data:', data);
 
   if (!data || data.length === 0) {
-    return <div>データがありません</div>;
+    return <div>No data available</div>;
   }
 
   // 全都道府県のデータを1つの配列にマージ
