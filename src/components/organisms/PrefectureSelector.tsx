@@ -1,10 +1,11 @@
 import React from 'react';
 import CheckboxWithLabel from '../molecules/CheckboxWithLabel';
+import { Prefecture } from '../../types';
 import styles from './PrefectureSelector.module.css';
 
 interface PrefectureSelectorProps {
-  prefectures: { prefCode: number; prefName: string }[];
-  selectedPrefectures: { [key: number]: boolean };
+  prefectures: Prefecture[];
+  selectedPrefectures: Record<number, boolean>;
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
 }
 

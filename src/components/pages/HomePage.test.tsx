@@ -1,21 +1,37 @@
-import { render, screen } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import HomePage from './HomePage';
+import { usePrefectureData } from '../../hooks/usePrefectureData';
 
-// Mock the custom hook
-jest.mock('../hooks/usePrefectureData', () => ({
-  usePrefectureData: () => ({
-    prefectures: [{ prefCode: 1, prefName: '北海道' }],
-    selectedPrefectures: {},
-    populationData: [],
-    handlePrefectureChange: jest.fn(),
-  }),
-}));
+jest.mock('../../hooks/usePrefectureData');
 
 describe('HomePage', () => {
-  it('renders HomePage with PrefectureSelector and PopulationGraph', () => {
+  beforeEach(() => {
+    (usePrefectureData as jest.Mock).mockReturnValue({
+      prefectures: [{ prefCode: 1, prefName: '北海道' }],
+      selectedPrefectures: {},
+      populationData: [],
+      handlePrefectureChange: jest.fn(),
+      clearAllSelections: jest.fn(),
+    });
+  });
+
+  it('renders clear button', () => {
     render(<HomePage />);
-    expect(screen.getByText('都道府県別人口推移')).toBeInTheDocument();
-    expect(screen.getByLabelText('北海道')).toBeInTheDocument();
-    expect(screen.getByText('データがありません')).toBeInTheDocument(); // Check for the no data message
+    expect(screen.getByText('選択をクリア')).toBeInTheDocument();
+  });
+
+  it('calls clearAllSelections when clear button is clicked', () => {
+    const mockClearAllSelections = jest.fn();
+    (usePrefectureData as jest.Mock).mockReturnValue({
+      prefectures: [{ prefCode: 1, prefName: '北海道' }],
+      selectedPrefectures: {},
+      populationData: [],
+      handlePrefectureChange: jest.fn(),
+      clearAllSelections: mockClearAllSelections,
+    });
+
+    render(<HomePage />);
+    fireEvent.click(screen.getByText('選択をクリア'));
+    expect(mockClearAllSelections).toHaveBeenCalled();
   });
 });

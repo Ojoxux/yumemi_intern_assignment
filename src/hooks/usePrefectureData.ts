@@ -1,20 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchPrefectures, fetchPopulation } from '../services/api';
-
-interface Prefecture {
-  prefCode: number;
-  prefName: string;
-}
-
-interface PopulationData {
-  year: number;
-  value: number;
-}
-
-interface PrefecturePopulation {
-  prefName: string;
-  data: PopulationData[];
-}
+import { Prefecture, PrefecturePopulation } from '../types';
+import { formatPopulationData } from '../utils/dataProcessing';
 
 export const usePrefectureData = () => {
   const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
@@ -40,7 +27,8 @@ export const usePrefectureData = () => {
       try {
         const data = await fetchPopulation(prefCode);
         const prefName = prefectures.find((pref) => pref.prefCode === prefCode)?.prefName || '';
-        setPopulationData((prev) => [...prev, { prefName, data: data[0].data }]);
+        const formattedData = formatPopulationData(data[0].data);
+        setPopulationData((prev) => [...prev, { prefName, data: formattedData }]);
       } catch (error) {
         console.error('Failed to fetch population data:', error);
       }
@@ -54,5 +42,10 @@ export const usePrefectureData = () => {
     }
   };
 
-  return { prefectures, selectedPrefectures, populationData, handlePrefectureChange };
+  const clearAllSelections = () => {
+    setSelectedPrefectures({});
+    setPopulationData([]);
+  };
+
+  return { prefectures, selectedPrefectures, populationData, handlePrefectureChange, clearAllSelections };
 };
