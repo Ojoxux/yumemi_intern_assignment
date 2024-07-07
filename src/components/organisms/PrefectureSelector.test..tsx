@@ -1,7 +1,8 @@
 import { render, fireEvent, screen } from '@testing-library/react';
 import PrefectureSelector from './PrefectureSelector';
+import { Prefecture } from '../../types';
 
-const mockPrefectures = [
+const mockPrefectures: Prefecture[] = [
   { prefCode: 1, prefName: '北海道' },
   { prefCode: 2, prefName: '青森県' },
 ];
