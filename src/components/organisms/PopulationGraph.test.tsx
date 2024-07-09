@@ -116,3 +116,69 @@ test('handles data with missing years gracefully', async () => {
   // データが正しく渡されていることを確認するためのログを追加
   console.log('Rendered PopulationGraph with irregular data:', irregularData);
 });
+
+test('handles data with missing values gracefully', async () => {
+  const dataWithMissingValues: PrefecturePopulation[] = [
+    {
+      prefName: '東京都',
+      data: [
+        { year: 1960, value: 9683802 },
+        { year: 1965, value: 10869244 },
+      ],
+    },
+    {
+      prefName: '大阪府',
+      data: [
+        { year: 1960, value: 5504746 },
+        // 1965年のデータが欠落
+      ],
+    },
+  ];
+
+  render(<PopulationGraph data={dataWithMissingValues} />);
+
+  // グラフコンテナの存在を確認
+  const graphContainer = await screen.findByTestId('population-graph');
+  expect(graphContainer).toBeInTheDocument();
+
+  // SVG要素の存在を確認
+  const svg = await screen.findByRole('img');
+  expect(svg).toBeInTheDocument();
+
+  // データが正しく渡されていることを確認するためのログを追加
+  console.log('Rendered PopulationGraph with data containing missing values:', dataWithMissingValues);
+});
+
+test('renders graph with data spanning different year ranges', async () => {
+  const dataWithDifferentYearRanges: PrefecturePopulation[] = [
+    {
+      prefName: '東京都',
+      data: [
+        { year: 1960, value: 9683802 },
+        { year: 1965, value: 10869244 },
+        { year: 1970, value: 11408071 },
+      ],
+    },
+    {
+      prefName: '大阪府',
+      data: [
+        { year: 1965, value: 6657189 },
+        { year: 1970, value: 7620480 },
+        { year: 1975, value: 8278925 },
+      ],
+    },
+  ];
+
+  render(<PopulationGraph data={dataWithDifferentYearRanges} />);
+
+  // グラフコンテナの存在を確認
+  const graphContainer = await screen.findByTestId('population-graph');
+  expect(graphContainer).toBeInTheDocument();
+
+  // SVG要素の存在を確認
+  const svg = await screen.findByRole('img');
+  expect(svg).toBeInTheDocument();
+
+  // データが正しく渡されていることを確認するためのログを追加
+  console.log('Rendered PopulationGraph with data spanning different year ranges:', dataWithDifferentYearRanges);
+});
