@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PopulationGraph from './PopulationGraph';
-import { PrefecturePopulation } from '../../types';
+import { PrefecturePopulation } from '../../../types';
 
 // Rechartsのモックを作成
 jest.mock('recharts', () => {
