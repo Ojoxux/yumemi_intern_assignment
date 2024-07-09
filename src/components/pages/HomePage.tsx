@@ -1,8 +1,8 @@
 import React from 'react';
-import BasicTemplate from '../../components/templates/BasicTemplate';
-import PrefectureSelector from '../../components/organisms/PrefectureSelector';
-import PopulationGraph from '../../components/organisms/PopulationGraph';
-import Button from '../../components/atoms/Button';
+import BasicTemplate from '../templates/BasicTemplate';
+import PrefectureSelector from '../organisms/PrefectureSelector/PrefectureSelector';
+import PopulationGraph from '../organisms/PopulationGraph/PopulationGraph';
+import Button from '../atoms/Button/Button';
 import { usePrefectureData } from '../../hooks/usePrefectureData';
 import styles from './HomePage.module.css';
 
