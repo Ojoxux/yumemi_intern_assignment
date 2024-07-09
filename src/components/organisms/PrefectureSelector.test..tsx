@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import PrefectureSelector from './PrefectureSelector';
 import { Prefecture } from '../../types';
