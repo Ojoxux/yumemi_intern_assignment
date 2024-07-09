@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-import { PrefecturePopulation } from '../../types';
+import { PrefecturePopulation } from '../../../types';
 
 interface PopulationGraphProps {
   data: PrefecturePopulation[];
