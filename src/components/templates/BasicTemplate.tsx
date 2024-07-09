@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../molecules/Header';
+import Header from '../molecules/Header/Header';
 
 interface BasicTemplateProps {
   children: React.ReactNode;
