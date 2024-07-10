@@ -1,6 +1,6 @@
 import React from 'react';
-import Checkbox from '../atoms/Checkbox';
-import Label from '../atoms/Label';
+import Checkbox from '../../atoms/Checkbox/Checkbox';
+import Label from '../../atoms/Label/Label';
 import styles from './CheckboxWithLabel.module.css';
 
 interface CheckboxWithLabelProps {

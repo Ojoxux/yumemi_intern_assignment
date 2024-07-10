@@ -1,6 +1,6 @@
 import React from 'react';
-import CheckboxWithLabel from '../molecules/CheckboxWithLabel';
-import { Prefecture } from '../../types';
+import CheckboxWithLabel from '../../molecules/CheckboxWithLabel/CheckboxWithLabel';
+import { Prefecture } from '../../../types';
 import styles from './PrefectureSelector.module.css';
 
 interface PrefectureSelectorProps {
