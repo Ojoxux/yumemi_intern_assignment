@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from '../../atoms/Title/Title';
-import '../../styles/Header.css';
+import './Header.module.css';
 
 const Header: React.FC = () => (
   <header className="header">

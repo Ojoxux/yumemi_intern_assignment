@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/Header.css';
+import '../../molecules/Header/Header.module.css';
 
 interface TitleProps {
   children: React.ReactNode;
