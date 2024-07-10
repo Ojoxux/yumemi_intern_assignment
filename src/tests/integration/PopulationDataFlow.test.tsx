@@ -35,7 +35,8 @@ describe('Population Data Flow', () => {
     expect(screen.getByTestId('population-graph')).toBeInTheDocument();
   });
 
-  it('handles API errors gracefully', async () => {
+  it('displays "No data available" when API throws an error', async () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     (fetchPopulation as jest.Mock).mockRejectedValue(new Error('API Error'));
 
     render(<App />);
@@ -49,5 +50,7 @@ describe('Population Data Flow', () => {
     await waitFor(() => {
       expect(screen.getByText('No data available')).toBeInTheDocument();
     }, { timeout: 3000 });
+
+    consoleSpy.mockRestore();
   });
 });
