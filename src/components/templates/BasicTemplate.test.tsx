@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import BasicTemplate from './BasicTemplate';
 
 // Header コンポーネントのモック
-jest.mock('../../components/molecules/Header', () => {
+jest.mock('../../components/molecules/Header/Header', () => {
   return function MockHeader() {
     return <div data-testid="mock-header">Mock Header</div>;
   };
