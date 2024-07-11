@@ -1,14 +1,15 @@
 import React from 'react';
-import Header from '../molecules/Header';
+import Header from '../molecules/Header/Header';
+import styles from './BasicTemplate.module.css'
 
 interface BasicTemplateProps {
   children: React.ReactNode;
 }
 
 const BasicTemplate: React.FC<BasicTemplateProps> = ({ children }) => (
-  <div className="main-container">
+  <div className={styles['main-container']}>
     <Header />
-    <main className="content">{children}</main>
+    <main className={styles['content']}>{children}</main>
   </div>
 );
 
