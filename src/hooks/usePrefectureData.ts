@@ -31,6 +31,10 @@ export const usePrefectureData = () => {
         setPopulationData((prev) => [...prev, { prefName, data: formattedData }]);
       } catch (error) {
         console.error('Failed to fetch population data:', error);
+        if (error instanceof Error) {
+          console.error('Error message: ', error.message);
+          console.error('Error stack: ', error.stack);
+        }
       }
     } else {
       setPopulationData((prev) =>
