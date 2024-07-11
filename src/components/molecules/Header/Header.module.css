@@ -11,15 +11,7 @@
   justify-content: space-between;
   align-items: center;
 }
-  
-.header-title {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: white;
-  letter-spacing: 0.025em;
-  margin: 0;
-}
-  
+
 .header-subtitle {
   color: white;
   font-size: 0.875rem;
