@@ -1,6 +1,6 @@
 import { render, fireEvent, screen } from '@testing-library/react';
 import PrefectureSelector from './PrefectureSelector';
-import { Prefecture } from '../../types';
+import { Prefecture } from '../../../types';
 
 const mockPrefectures: Prefecture[] = [
   { prefCode: 1, prefName: '北海道' },
@@ -34,6 +34,18 @@ describe('PrefectureSelector', () => {
     expect(mockOnChange).toHaveBeenCalledWith(1, true);
   });
 
+  it('reflects the selected state of prefectures', () => {
+    render(
+      <PrefectureSelector
+        prefectures={mockPrefectures}
+        selectedPrefectures={{ 1: true }}
+        onPrefectureChange={() => {}}
+      />
+    );
+    expect(screen.getByLabelText('北海道')).toBeChecked();
+    expect(screen.getByLabelText('青森県')).not.toBeChecked();
+  });
+
   it('calls onClearAll when the clear all button is clicked', () => {
     const mockOnChange = jest.fn();
     const mockOnClearAll = jest.fn();
@@ -46,5 +58,17 @@ describe('PrefectureSelector', () => {
     );
     fireEvent.click(screen.getByText('全て外す'));
     expect(mockOnClearAll).toHaveBeenCalled();
+  });
+
+  // スナップショットテスト
+  it('matches snapshot', () => {
+    const { asFragment } = render(
+      <PrefectureSelector
+        prefectures={mockPrefectures}
+        selectedPrefectures={{ 1: true }}
+        onPrefectureChange={() => {}}
+      />
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 });

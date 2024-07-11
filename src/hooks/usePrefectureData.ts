@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchPrefectures, fetchPopulation } from '../services/api';
 import { Prefecture, PrefecturePopulation } from '../types';
 import { formatPopulationData } from '../utils/dataProcessing';
@@ -20,7 +20,7 @@ export const usePrefectureData = () => {
     loadPrefectures();
   }, []);
 
-  const handlePrefectureChange = async (prefCode: number, checked: boolean) => {
+  const handlePrefectureChange = useCallback(async (prefCode: number, checked: boolean) => {
     setSelectedPrefectures((prev) => ({ ...prev, [prefCode]: checked }));
 
     if (checked) {
@@ -31,21 +31,22 @@ export const usePrefectureData = () => {
         setPopulationData((prev) => [...prev, { prefName, data: formattedData }]);
       } catch (error) {
         console.error('Failed to fetch population data:', error);
+        if (error instanceof Error) {
+          console.error('Error message: ', error.message);
+          console.error('Error stack: ', error.stack);
+        }
       }
     } else {
       setPopulationData((prev) =>
-        prev.filter(
-          (item) =>
-            item.prefName !== prefectures.find((pref) => pref.prefCode === prefCode)?.prefName
-        )
+        prev.filter((item) => item.prefName !== prefectures.find((pref) => pref.prefCode === prefCode)?.prefName)
       );
     }
-  };
+  }, [prefectures]);
 
-  const clearAllSelections = () => {
+  const clearAllSelections = useCallback(() => {
     setSelectedPrefectures({});
     setPopulationData([]);
-  };
+  }, []);
 
   return { prefectures, selectedPrefectures, populationData, handlePrefectureChange, clearAllSelections };
 };

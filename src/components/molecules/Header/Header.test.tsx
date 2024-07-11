@@ -1,9 +1,8 @@
-// src/components/molecules/Header.test.tsx
 import { render, screen } from '@testing-library/react';
 import Header from './Header';
 
 // CSSのインポートをモック化
-jest.mock('../../styles/Header.css', () => ({}));
+jest.mock('./Header.module.css', () => ({}));
 
 describe('Header', () => {
   it('renders the header with title', () => {
