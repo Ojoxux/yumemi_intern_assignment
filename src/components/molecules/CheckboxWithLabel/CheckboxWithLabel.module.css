@@ -1,10 +1,27 @@
 .checkboxWithLabel {
-    display: flex;
-    align-items: center;
-    padding: 3px;
-    min-width: 90px;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  width: 100%;
+}
+
+.checkboxWithLabel input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+.checkboxWithLabel label {
+  font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .checkboxWithLabel input[type="checkbox"] {
+      width: 1.5rem;
+      height: 1.5rem;
   }
-  
-  .checkboxWithLabel input {
-    margin-right: 5px;
+
+  .checkboxWithLabel label {
+      font-size: 1rem;
   }
+}
