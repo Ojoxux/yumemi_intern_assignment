@@ -47,7 +47,15 @@ export const fetchPopulation = async (prefCode: number, apiInstance: AxiosInstan
       throw new Error('Unexpected API response format');
     }
 
-    return response.data.result.data;
+    // カテゴリー別のデータを整形して返す
+    const formattedData = {
+      総人口: response.data.result.data.find((d: any) => d.label === '総人口')?.data || [],
+      年少人口: response.data.result.data.find((d: any) => d.label === '年少人口')?.data || [],
+      生産年齢人口: response.data.result.data.find((d: any) => d.label === '生産年齢人口')?.data || [],
+      老年人口: response.data.result.data.find((d: any) => d.label === '老年人口')?.data || [],
+    };
+
+    return formattedData;
   } catch (error) {
     console.error('人口データの取得に失敗しました:', error);
     throw error;
