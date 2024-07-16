@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   LineChart,
   Line,
@@ -9,92 +9,61 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-
-import { PrefecturePopulation } from '../../../types';
+import { PrefecturePopulation, PopulationCategory } from '../../../types';
+import styles from './PopulationGraph.module.css';
 
 interface PopulationGraphProps {
   data: PrefecturePopulation[];
+  category: PopulationCategory;
 }
 
-const PopulationGraph: React.FC<PopulationGraphProps> = ({ data }) => {
-  console.log('Rendering PopulationGraph with data:', data);
+const PopulationGraph: React.FC<PopulationGraphProps> = ({ data, category }) => {
+  const chartRef = useRef<any>(null);
 
-  if (!data || data.length === 0) {
-    return <div>No data available</div>;
-  }
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.forceUpdate();
+    }
+  }, [category]);
 
-  // 全都道府県のデータを1つの配列にマージ
-  const mergedData = data[0].data.map((item) => {
-    const yearData: { [key: string]: number } = { year: item.year };
-    data.forEach((prefecture) => {
-      const matchingData = prefecture.data.find((d) => d.year === item.year);
-      yearData[prefecture.prefName] = matchingData ? matchingData.value : 0;
-    });
-    return yearData;
-  });
+  const mergedData = data.length > 0
+    ? data[0].data.map((item) => {
+        const yearData: { [key: string]: number } = { year: item.year };
+        data.forEach((prefecture) => {
+          const matchingData = prefecture.data.find((d) => d.year === item.year);
+          yearData[prefecture.prefName] = matchingData ? matchingData.value : 0;
+        });
+        return yearData;
+      })
+    : [];
 
-  // 拡張された色のパレット
   const colors = [
-    '#8884d8',
-    '#82ca9d',
-    '#ffc658',
-    '#ff7300',
-    '#a4de6c',
-    '#d88488',
-    '#8dd1e1',
-    '#82ca9d',
-    '#a4de6c',
-    '#d0ed57',
-    '#ffc658',
-    '#ff7300',
-    '#ff8e00',
-    '#ffa500',
-    '#ffb14e',
-    '#ffbd6f',
-    '#ffc58f',
-    '#ffcea2',
-    '#ffd7b5',
-    '#ffe0c8',
-    '#6a3d9a',
-    '#b15928',
-    '#e31a1c',
-    '#fb9a99',
-    '#1f78b4',
-    '#33a02c',
-    '#b2df8a',
-    '#fb9a99',
-    '#fdbf6f',
-    '#ff7f00',
-    '#cab2d6',
-    '#6a3d9a',
-    '#ffff99',
-    '#b15928',
-    '#f781bf',
-    '#999999',
-    '#66c2a5',
-    '#fc8d62',
-    '#8da0cb',
-    '#e78ac3',
-    '#a6d854',
-    '#ffd92f',
-    '#e5c494',
-    '#b3b3b3',
-    '#7fc97f',
-    '#beaed4',
-    '#fdc086',
-    '#ffff99',
-    '#386cb0',
-    '#f0027f',
+    '#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#a4de6c',
+    '#d88488', '#8dd1e1', '#82ca9d', '#a4de6c', '#d0ed57'
   ];
 
+  const formatYAxis = (value: number): string => {
+    if (value >= 1000000) {
+      const hundredThousands = Math.floor(value / 100000);
+      return `${hundredThousands * 10}万`;
+    } else if (value >= 10000) {
+      return `${Math.floor(value / 10000)}万`;
+    }
+    return value.toString();
+  };
+
+  const formatTooltip = (value: number): [string, string] => {
+    return [value.toLocaleString(), '人'];
+  };
+
   return (
-    <div data-testid="population-graph" className="graph-container">
+    <div data-testid="population-graph" className={styles.container}>
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={mergedData}>
+        <LineChart data={mergedData} ref={chartRef}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="year" />
-          <YAxis />
-          <Tooltip />
+          <YAxis tickFormatter={formatYAxis as (value: number, index: number) => string} />
+          <Tooltip formatter={formatTooltip} />
           <Legend />
           {data.map((prefecture, index) => (
             <Line

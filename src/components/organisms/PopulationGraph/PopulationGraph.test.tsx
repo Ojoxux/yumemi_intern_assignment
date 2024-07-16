@@ -2,7 +2,10 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PopulationGraph from './PopulationGraph';
+import { PopulationCategory } from '../../../types';
 import { PrefecturePopulation } from '../../../types';
+
+const defaultCategory: PopulationCategory = '総人口';
 
 // Rechartsのモックを作成
 jest.mock('recharts', () => {
@@ -33,7 +36,7 @@ const mockData: PrefecturePopulation[] = [
 test('renders population graph', async () => {
   console.log('Starting test with mock data:', mockData);
 
-  render(<PopulationGraph data={mockData} />);
+  render(<PopulationGraph data={mockData} category={defaultCategory}/>);
 
   // グラフコンテナの存在を確認
   const graphContainer = await screen.findByTestId('population-graph', {}, { timeout: 5000 });
@@ -54,7 +57,7 @@ test('renders population graph', async () => {
 }, 20000);
 
 test('displays "No data available" when no data is provided', () => {
-  render(<PopulationGraph data={[]} />);
+  render(<PopulationGraph data={[]} category={defaultCategory} />);
   expect(screen.getByText('No data available')).toBeInTheDocument();
 });
 
@@ -76,7 +79,7 @@ test('renders graph with multiple prefectures', async () => {
     },
   ];
 
-  render(<PopulationGraph data={multiPrefData} />);
+  render(<PopulationGraph data={multiPrefData} category={defaultCategory} />);
 
   // グラフコンテナの存在を確認
   const graphContainer = await screen.findByTestId('population-graph');
@@ -103,7 +106,7 @@ test('handles data with missing years gracefully', async () => {
     },
   ];
 
-  render(<PopulationGraph data={irregularData} />);
+  render(<PopulationGraph data={irregularData} category={defaultCategory} />);
 
   // グラフコンテナの存在を確認
   const graphContainer = await screen.findByTestId('population-graph');
@@ -135,7 +138,7 @@ test('handles data with missing values gracefully', async () => {
     },
   ];
 
-  render(<PopulationGraph data={dataWithMissingValues} />);
+  render(<PopulationGraph data={dataWithMissingValues} category={defaultCategory} />);
 
   // グラフコンテナの存在を確認
   const graphContainer = await screen.findByTestId('population-graph');
@@ -169,7 +172,7 @@ test('renders graph with data spanning different year ranges', async () => {
     },
   ];
 
-  render(<PopulationGraph data={dataWithDifferentYearRanges} />);
+  render(<PopulationGraph data={dataWithDifferentYearRanges} category={defaultCategory}/>);
 
   // グラフコンテナの存在を確認
   const graphContainer = await screen.findByTestId('population-graph');
