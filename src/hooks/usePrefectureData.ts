@@ -47,18 +47,19 @@ export const usePrefectureData = (): UsePrefectureDataReturn => {
       }
   
       return Object.entries(data).reduce((acc, [key, value]) => {
-        acc[key as PopulationCategory] = { 
-          prefName, 
-          data: formatPopulationData(Array.isArray(value) ? value : undefined) 
-        };
+        if (Array.isArray(value)) {
+          acc[key as PopulationCategory] = { 
+            prefName, 
+            data: formatPopulationData(value)
+          };
+        } else {
+          console.warn(`Invalid data format for category ${key}:`, value);
+          acc[key as PopulationCategory] = { prefName, data: [] };
+        }
         return acc;
       }, {} as Record<PopulationCategory, PrefecturePopulation>);
     } catch (error) {
       console.error('Failed to fetch population data:', error);
-      if (error instanceof Error) {
-        console.error('Error message: ', error.message);
-        console.error('Error stack: ', error.stack);
-      }
       return null;
     }
   }, [prefectures]);
