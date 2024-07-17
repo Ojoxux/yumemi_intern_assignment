@@ -211,6 +211,7 @@
         "npm:@testing-library/react@^16.0.0",
         "npm:@testing-library/user-event@^14.5.2",
         "npm:@types/jest@^29.5.12",
+        "npm:@types/lodash@^4.17.7",
         "npm:@types/node@^20.14.10",
         "npm:@types/react-dom@^18.3.0",
         "npm:@types/react@^18.3.3",
@@ -238,7 +239,7 @@
         "npm:resize-observer-polyfill@^1.5.1",
         "npm:ts-jest@^29.1.5",
         "npm:ts-node@^10.9.2",
-        "npm:typescript@^5.2.2",
+        "npm:typescript@^5.5.3",
         "npm:vite-plugin-env-compatible@^2.0.1",
         "npm:vite@^5.3.1",
         "npm:vitest@^1.6.0"
