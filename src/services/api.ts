@@ -23,7 +23,7 @@ if(process.env.NODE_ENV !== 'test') {
 export const fetchPrefectures = async (apiInstance: AxiosInstance = api) => {
   try {
     const response = await apiInstance.get('/api/v1/prefectures');
-    if (!response.data.result || !Array.isArray(response.data.result)) {
+    if (!response || !response.data || !response.data.result || !Array.isArray(response.data.result)) {
       throw new Error('Unexpected API response format');
     }
     return response.data.result;
@@ -43,7 +43,7 @@ export const fetchPopulation = async (prefCode: number, apiInstance: AxiosInstan
       params: { prefCode, cityCode: '-' },
     });
 
-    if (!response.data || !response.data.result || !Array.isArray(response.data.result.data)) {
+    if (!response || !response.data || !response.data.result || !Array.isArray(response.data.result.data)) {
       throw new Error('Unexpected API response format');
     }
 
