@@ -11,9 +11,12 @@ const mockPrefectures = [
   { prefCode: 2, prefName: '青森県' },
 ];
 
-const mockPopulationData = [
-  { data: [{ year: 2020, value: 5000000 }] },
-];
+const mockPopulationData = {
+  総人口: [{ year: 2020, value: 5000000 }],
+  年少人口: [{ year: 2020, value: 1000000 }],
+  生産年齢人口: [{ year: 2020, value: 3000000 }],
+  老年人口: [{ year: 2020, value: 1000000 }],
+};
 
 describe('Prefecture Selection Integration', () => {
   beforeEach(() => {
@@ -32,7 +35,12 @@ describe('Prefecture Selection Integration', () => {
     userEvent.click(checkbox);
 
     // Wait for population data to load
-    await waitFor(() => expect(screen.getByTestId('population-graph')).toBeInTheDocument());
+    await waitFor(() => {
+      const noDataElement = screen.queryByTestId('population-graph-no-data');
+      const graphElement = screen.queryByTestId('population-graph');
+      expect(noDataElement).not.toBeInTheDocument();
+      expect(graphElement).toBeInTheDocument();
+    }, { timeout: 5000 });
 
     // Check if the graph is displayed
     expect(screen.getByTestId('population-graph')).toBeInTheDocument();
@@ -50,6 +58,14 @@ describe('Prefecture Selection Integration', () => {
     userEvent.click(hokkaido);
     userEvent.click(aomori);
 
+    // Wait for population data to load
+    await waitFor(() => {
+      const noDataElement = screen.queryByTestId('population-graph-no-data');
+      const graphElement = screen.queryByTestId('population-graph');
+      expect(noDataElement).not.toBeInTheDocument();
+      expect(graphElement).toBeInTheDocument();
+    }, { timeout: 5000 });
+
     // Clear selections
     const clearButton = screen.getByText('選択をクリア');
     userEvent.click(clearButton);
@@ -60,7 +76,10 @@ describe('Prefecture Selection Integration', () => {
       expect(aomori).not.toBeChecked();
     });
 
-    // Check if the graph is not displayed
-    expect(screen.queryByTestId('population-graph')).not.toBeInTheDocument();
+    // Check if the graph is not displayed and "No data available" is shown
+    await waitFor(() => {
+      expect(screen.queryByTestId('population-graph')).not.toBeInTheDocument();
+      expect(screen.getByTestId('population-graph-no-data')).toBeInTheDocument();
+    });
   });
 });
