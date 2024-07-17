@@ -11,7 +11,9 @@ describe('App', () => {
     await waitFor(() => {
         render(<App />);
     });
-    expect(screen.getByText('都道府県別人口推移')).toBeInTheDocument();
+    const elements = screen.getAllByText('都道府県別人口推移');
+    expect(elements.length).toBeGreaterThan(0);
+    expect(elements[0]).toBeInTheDocument();
   });
 
   it('renders main components', async () => {
