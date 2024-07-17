@@ -1,20 +1,21 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PopulationGraph from './PopulationGraph';
+import PopulationGraph, { formatYAxis, formatTooltip } from './PopulationGraph';
 import { PopulationCategory } from '../../../types';
 import { PrefecturePopulation } from '../../../types';
 
 const defaultCategory: PopulationCategory = '総人口';
 
-// Rechartsのモックを作成
 jest.mock('recharts', () => {
   const OriginalModule = jest.requireActual('recharts');
   return {
     ...OriginalModule,
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    LineChart: ({ children }: { children: React.ReactNode }) => <svg role="img">{children}</svg>,
-    Line: () => null,
+    LineChart: React.forwardRef<any, { children: React.ReactNode }>((props, ref) => (
+      <svg role="img" ref={ref}>{props.children}</svg>
+    )),
+    Line: () => <g role="presentation" />,
     XAxis: () => null,
     YAxis: () => null,
     CartesianGrid: () => null,
@@ -34,31 +35,17 @@ const mockData: PrefecturePopulation[] = [
 ];
 
 test('renders population graph', async () => {
-  console.log('Starting test with mock data:', mockData);
-
   render(<PopulationGraph data={mockData} category={defaultCategory}/>);
 
-  // グラフコンテナの存在を確認
-  const graphContainer = await screen.findByTestId('population-graph', {}, { timeout: 5000 });
-  expect(graphContainer).toBeInTheDocument();
-  console.log('Graph container found');
-
-  // SVG要素の存在を確認
-  await waitFor(
-    () => {
-      const svg = screen.getByRole('img');
-      expect(svg).toBeInTheDocument();
-      console.log('SVG element found');
-    },
-    { timeout: 5000 }
-  );
-
-  console.log('Test completed successfully');
-}, 20000);
+  await waitFor(() => {
+    expect(screen.getByTestId('population-graph')).toBeInTheDocument();
+    expect(screen.getByRole('img')).toBeInTheDocument();
+  });
+});
 
 test('displays "No data available" when no data is provided', () => {
   render(<PopulationGraph data={[]} category={defaultCategory} />);
-  expect(screen.getByText('No data available')).toBeInTheDocument();
+  expect(screen.getByTestId('population-graph-no-data')).toHaveTextContent('No data available');
 });
 
 test('renders graph with multiple prefectures', async () => {
@@ -184,4 +171,41 @@ test('renders graph with data spanning different year ranges', async () => {
 
   // データが正しく渡されていることを確認するためのログを追加
   console.log('Rendered PopulationGraph with data spanning different year ranges:', dataWithDifferentYearRanges);
+});
+
+describe('formatYAxis', () => {
+  test('formats numbers less than 10000', () => {
+    expect(formatYAxis(5000)).toBe('5000');
+  });
+
+  test('formats numbers between 10000 and 999999', () => {
+    expect(formatYAxis(50000)).toBe('5万');
+  });
+
+  test('formats numbers 1000000 or greater', () => {
+    expect(formatYAxis(1500000)).toBe('150万');
+  });
+});
+
+describe('formatTooltip', () => {
+  test('formats number with comma separator and adds 人', () => {
+    expect(formatTooltip(1234567)).toEqual(['1,234,567', '人']);
+  });
+});
+
+test('useEffect hook updates chart when category changes', async () => {
+  const { rerender } = render(<PopulationGraph data={mockData} category={defaultCategory} />);  
+  // カテゴリを変更してコンポーネントを再レンダリング
+  rerender(<PopulationGraph data={mockData} category="年少人口" />);
+  
+  await waitFor(() => {
+    expect(screen.getByTestId('population-graph')).toBeInTheDocument();
+    expect(screen.getByRole('img')).toBeInTheDocument();
+  });
+});
+
+test('renders correct number of Line components', () => {
+  render(<PopulationGraph data={mockData} category={defaultCategory} />);
+  const lineElements = screen.getAllByRole('presentation');
+  expect(lineElements.length).toBe(mockData.length);
 });
