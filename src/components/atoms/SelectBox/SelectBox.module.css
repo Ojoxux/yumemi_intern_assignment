@@ -1,0 +1,41 @@
+.selectWrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  
+  .selectBox {
+    width: 100%;
+    padding: 8px 30px 8px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+  
+  .selectWrapper::after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  @media (max-width: 480px) {
+    .selectBox {
+      font-size: 14px;
+      padding: 6px 25px 6px 8px;
+    }
+  }
+  
+  @media (min-width: 481px) {
+    .selectWrapper {
+      width: auto;
+      min-width: 200px;
+    }
+  }
