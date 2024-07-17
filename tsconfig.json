@@ -6,12 +6,13 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
 
     "strict": true,
@@ -19,7 +20,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "types": ["jest", "node", "@testing-library/jest-dom", "vite/client"]
+    "types": ["jest", "node", "@testing-library/jest-dom", "vite/client", "recharts"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
