@@ -3,7 +3,17 @@ import { fetchPrefectures, fetchPopulation } from '../services/api';
 import { Prefecture, PrefecturePopulation, PopulationCategory } from '../types';
 import { formatPopulationData } from '../utils/dataProcessing';
 
-export const usePrefectureData = () => {
+export interface UsePrefectureDataReturn {
+  prefectures: Prefecture[];
+  selectedPrefectures: Record<number, boolean>;
+  populationData: PrefecturePopulation[];
+  handlePrefectureChange: (prefCode: number, checked: boolean) => Promise<void>;
+  clearAllSelections: () => void;
+  category: PopulationCategory;
+  handleCategoryChange: (newCategory: PopulationCategory) => void;
+}
+
+export const usePrefectureData = (): UsePrefectureDataReturn => {
   const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
   const [selectedPrefectures, setSelectedPrefectures] = useState<Record<number, boolean>>({});
   const [populationData, setPopulationData] = useState<Record<PopulationCategory, PrefecturePopulation[]>>({
@@ -30,30 +40,45 @@ export const usePrefectureData = () => {
     try {
       const data = await fetchPopulation(prefCode);
       const prefName = prefectures.find((pref) => pref.prefCode === prefCode)?.prefName || '';
+      
+      if (!data || typeof data !== 'object') {
+        console.error('Invalid data format:', data);
+        return null;
+      }
+  
       return Object.entries(data).reduce((acc, [key, value]) => {
-        acc[key as PopulationCategory] = { prefName, data: formatPopulationData(value) };
+        if (Array.isArray(value)) {
+          acc[key as PopulationCategory] = { 
+            prefName, 
+            data: formatPopulationData(value)
+          };
+        } else {
+          console.warn(`Invalid data format for category ${key}:`, value);
+          acc[key as PopulationCategory] = { prefName, data: [] };
+        }
         return acc;
       }, {} as Record<PopulationCategory, PrefecturePopulation>);
     } catch (error) {
       console.error('Failed to fetch population data:', error);
-      if (error instanceof Error) {
-        console.error('Error message: ', error.message);
-        console.error('Error stack: ', error.stack);
-      }
       return null;
     }
   }, [prefectures]);
 
   const handlePrefectureChange = useCallback(async (prefCode: number, checked: boolean) => {
     setSelectedPrefectures((prev) => ({ ...prev, [prefCode]: checked }));
-
+  
     if (checked) {
       const newData = await fetchPrefectureData(prefCode);
       if (newData) {
         setPopulationData((prev) => {
           const updated = { ...prev };
           Object.entries(newData).forEach(([cat, data]) => {
-            updated[cat as PopulationCategory] = [...updated[cat as PopulationCategory], data];
+            if (!Array.isArray(updated[cat as PopulationCategory])) {
+              updated[cat as PopulationCategory] = [];
+            }
+            if (data.prefName && data.data && data.data.length > 0) {
+              updated[cat as PopulationCategory] = [...updated[cat as PopulationCategory], data];
+            }
           });
           return updated;
         });
@@ -62,9 +87,11 @@ export const usePrefectureData = () => {
       setPopulationData((prev) => {
         const updated = { ...prev };
         Object.keys(updated).forEach((cat) => {
-          updated[cat as PopulationCategory] = updated[cat as PopulationCategory].filter(
-            (item) => item.prefName !== prefectures.find((pref) => pref.prefCode === prefCode)?.prefName
-          );
+          if (Array.isArray(updated[cat as PopulationCategory])) {
+            updated[cat as PopulationCategory] = updated[cat as PopulationCategory].filter(
+              (item) => item.prefName !== prefectures.find((pref) => pref.prefCode === prefCode)?.prefName
+            );
+          }
         });
         return updated;
       });
