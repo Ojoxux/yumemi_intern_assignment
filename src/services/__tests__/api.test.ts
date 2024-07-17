@@ -34,6 +34,16 @@ describe('API関数', () => {
   });
 
   describe('createApi', () => {
+    it('APIキーが undefined の場合、空文字列を使用する', () => {
+      process.env.VITE_REACT_APP_RESAS_API_KEY = undefined;
+      const result = apiModule.createApi(mockAxiosCreate);
+      expect(mockAxiosCreate).toHaveBeenCalledWith({
+        baseURL: 'https://opendata.resas-portal.go.jp',
+        headers: { 'X-API-KEY': '' },
+      });
+      expect(result).toBe(mockApi);
+    });
+
     it('APIキーが設定されている場合、正しい設定でAxiosインスタンスを作成する', () => {
       const result = apiModule.createApi(mockAxiosCreate);
       expect(mockAxiosCreate).toHaveBeenCalledWith({
@@ -134,15 +144,40 @@ describe('API関数', () => {
 
       await expect(apiModule.fetchPrefectures(mockApi)).rejects.toThrow('Unexpected API response format');
     });
+
+    it('APIレスポンスが null の場合、エラーをスローする', async () => {
+      mockApi.get.mockResolvedValue(null);
+
+      await expect(fetchPrefectures(mockApi)).rejects.toThrow('Unexpected API response format');
+      expect(consoleErrorSpy).toHaveBeenCalledWith('都道府県データの取得に失敗しました:', expect.any(Error));
+    });
   });
 
   describe('fetchPopulation', () => {
+    const mockPopulationData = {
+      総人口: [{ year: 2020, value: 5000000 }],
+      年少人口: [{ year: 2020, value: 1000000 }],
+      生産年齢人口: [{ year: 2020, value: 3000000 }],
+      老年人口: [{ year: 2020, value: 1000000 }]
+    };
+
     it('データを正常に取得する', async () => {
-      const mockData = { data: { result: { data: [{ year: 2020, value: 5000000 }] } } };
+      const mockData = { 
+      data: { 
+        result: {
+          data: [
+            { label: "総人口", data: [{ year: 2020, value: 5000000 }] },
+            { label: "年少人口", data: [{ year: 2020, value: 1000000 }] },
+            { label: "生産年齢人口", data: [{ year: 2020, value: 3000000 }] },
+            { label: "老年人口", data: [{ year: 2020, value: 1000000 }] }
+          ]
+        } 
+      } 
+    };
       mockApi.get.mockResolvedValue(mockData);
 
       const result = await fetchPopulation(1, mockApi);
-      expect(result).toEqual(mockData.data.result.data);
+      expect(result).toEqual(mockPopulationData);
       expect(mockApi.get).toHaveBeenCalledWith('/api/v1/population/composition/perYear', {
         params: { prefCode: 1, cityCode: '-' },
       });
@@ -163,19 +198,46 @@ describe('API関数', () => {
     });
 
     it('空のデータを適切に処理する', async () => {
-      const mockData = { data: { result: { data: [] } } };
+      const mockData = { 
+        data: { 
+          result: {
+            data: [
+              { label: "総人口", data: [] },
+              { label: "年少人口", data: [] },
+              { label: "生産年齢人口", data: [] },
+              { label: "老年人口", data: [] }
+            ]
+          } 
+        } 
+      };
       mockApi.get.mockResolvedValue(mockData);
 
       const result = await fetchPopulation(1, mockApi);
-      expect(result).toEqual([]);
+      expect(result).toEqual({
+        総人口: [],
+        年少人口: [],
+        生産年齢人口: [],
+        老年人口: []
+      });
     });
 
     it('prefCodeが境界値（1と47）の場合、正常に動作する', async () => {
-      const mockData = { data: { result: { data: [{ year: 2020, value: 5000000 }] } } };
+      const mockData = { 
+        data: { 
+          result: {
+            data: [
+              { label: "総人口", data: [{ year: 2020, value: 5000000 }] },
+              { label: "年少人口", data: [{ year: 2020, value: 1000000 }] },
+              { label: "生産年齢人口", data: [{ year: 2020, value: 3000000 }] },
+              { label: "老年人口", data: [{ year: 2020, value: 1000000 }] }
+            ]
+          } 
+        } 
+      };
       mockApi.get.mockResolvedValue(mockData);
-
-      await expect(apiModule.fetchPopulation(1, mockApi)).resolves.toEqual(mockData.data.result.data);
-      await expect(apiModule.fetchPopulation(47, mockApi)).resolves.toEqual(mockData.data.result.data);
+  
+      await expect(apiModule.fetchPopulation(1, mockApi)).resolves.toEqual(mockPopulationData);
+      await expect(apiModule.fetchPopulation(47, mockApi)).resolves.toEqual(mockPopulationData);
     });
 
     it('prefCodeが整数でない場合、エラーをスローする', async () => {
@@ -194,6 +256,13 @@ describe('API関数', () => {
       await expect(fetchPopulation(1, mockApi)).rejects.toThrow('Network Error');
       expect(consoleErrorSpy).toHaveBeenCalledWith('人口データの取得に失敗しました:', mockError);
     });
+
+    it('APIレスポンスが null の場合、エラーをスローする', async () => {
+      mockApi.get.mockResolvedValue(null);
+  
+      await expect(fetchPopulation(1, mockApi)).rejects.toThrow('Unexpected API response format');
+      expect(consoleErrorSpy).toHaveBeenCalledWith('人口データの取得に失敗しました:', expect.any(Error));
+    }); 
 
     it('APIレスポンスが期待される形式でない場合にエラーを処理する', async () => {
       const mockData = { data: { result: 'unexpected format' } };
@@ -233,6 +302,56 @@ describe('API関数', () => {
 
       await expect(apiModule.fetchPopulation(1, mockApi)).rejects.toThrow('Unexpected API response format');
       expect(consoleErrorSpy).toHaveBeenCalledWith('人口データの取得に失敗しました:', expect.any(Error));
+    });
+
+    it('一部の人口カテゴリが欠けている場合、欠けているカテゴリに空の配列を設定する', async () => {
+      const mockData = { 
+        data: { 
+          result: {
+            data: [
+              { label: "総人口", data: [{ year: 2020, value: 5000000 }] },
+              { label: "年少人口", data: [{ year: 2020, value: 1000000 }] }
+              // 生産年齢人口と老年人口が欠けている
+            ]
+          } 
+        } 
+      };
+      mockApi.get.mockResolvedValue(mockData);
+  
+      const result = await fetchPopulation(1, mockApi);
+      expect(result).toEqual({
+        総人口: [{ year: 2020, value: 5000000 }],
+        年少人口: [{ year: 2020, value: 1000000 }],
+        生産年齢人口: [],
+        老年人口: []
+      });
+    });
+  
+    it('予期しない人口カテゴリラベルがある場合、そのカテゴリを無視する', async () => {
+      const mockData = { 
+        data: { 
+          result: {
+            data: [
+              { label: "総人口", data: [{ year: 2020, value: 5000000 }] },
+              { label: "予期しないカテゴリ", data: [{ year: 2020, value: 1000000 }] },
+              { label: "年少人口", data: [{ year: 2020, value: 1000000 }] },
+              { label: "生産年齢人口", data: [{ year: 2020, value: 3000000 }] },
+              { label: "老年人口", data: [{ year: 2020, value: 1000000 }] }
+            ]
+          } 
+        } 
+      };
+      mockApi.get.mockResolvedValue(mockData);
+  
+      const result = await fetchPopulation(1, mockApi);
+      expect(result).toEqual({
+        総人口: [{ year: 2020, value: 5000000 }],
+        年少人口: [{ year: 2020, value: 1000000 }],
+        生産年齢人口: [{ year: 2020, value: 3000000 }],
+        老年人口: [{ year: 2020, value: 1000000 }]
+      });
+      // 予期しないカテゴリが結果に含まれていないことを確認
+      expect(result).not.toHaveProperty('予期しないカテゴリ');
     });
   });
 
